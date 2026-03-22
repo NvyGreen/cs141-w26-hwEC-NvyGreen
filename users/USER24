@@ -1,0 +1,90 @@
+.save Y0
+Y0 00000
+Y0 11111
+Y0 22222
+Y0 33333
+Y0 44444
+.end
+.print Y0
+.print Y0
+.save Y1
+Y1 00000
+Y1 11111
+Y1 22222
+Y1 33333
+Y1 44444
+.end
+.print Y1
+.print Y1
+.save Y2
+Y2 00000
+Y2 11111
+Y2 22222
+Y2 33333
+Y2 44444
+.end
+.print Y2
+.print Y2
+.save Y3
+Y3 00000
+Y3 11111
+Y3 22222
+Y3 33333
+Y3 44444
+.end
+.print Y3
+.print Y3
+.save Y4
+Y4 00000
+Y4 11111
+Y4 22222
+Y4 33333
+Y4 44444
+.end
+.print Y4
+.print Y4
+.save Y5
+Y5 00000
+Y5 11111
+Y5 22222
+Y5 33333
+Y5 44444
+.end
+.print Y5
+.print Y5
+.save Y6
+Y6 00000
+Y6 11111
+Y6 22222
+Y6 33333
+Y6 44444
+.end
+.print Y6
+.print Y6
+.save Y7
+Y7 00000
+Y7 11111
+Y7 22222
+Y7 33333
+Y7 44444
+.end
+.print Y7
+.print Y7
+.save Y8
+Y8 00000
+Y8 11111
+Y8 22222
+Y8 33333
+Y8 44444
+.end
+.print Y8
+.print Y8
+.save Y9
+Y9 00000
+Y9 11111
+Y9 22222
+Y9 33333
+Y9 44444
+.end
+.print Y9
+.print Y9

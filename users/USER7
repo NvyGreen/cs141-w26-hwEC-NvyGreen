@@ -1,0 +1,90 @@
+.save H0
+H0 00000
+H0 11111
+H0 22222
+H0 33333
+H0 44444
+.end
+.print H0
+.print H0
+.save H1
+H1 00000
+H1 11111
+H1 22222
+H1 33333
+H1 44444
+.end
+.print H1
+.print H1
+.save H2
+H2 00000
+H2 11111
+H2 22222
+H2 33333
+H2 44444
+.end
+.print H2
+.print H2
+.save H3
+H3 00000
+H3 11111
+H3 22222
+H3 33333
+H3 44444
+.end
+.print H3
+.print H3
+.save H4
+H4 00000
+H4 11111
+H4 22222
+H4 33333
+H4 44444
+.end
+.print H4
+.print H4
+.save H5
+H5 00000
+H5 11111
+H5 22222
+H5 33333
+H5 44444
+.end
+.print H5
+.print H5
+.save H6
+H6 00000
+H6 11111
+H6 22222
+H6 33333
+H6 44444
+.end
+.print H6
+.print H6
+.save H7
+H7 00000
+H7 11111
+H7 22222
+H7 33333
+H7 44444
+.end
+.print H7
+.print H7
+.save H8
+H8 00000
+H8 11111
+H8 22222
+H8 33333
+H8 44444
+.end
+.print H8
+.print H8
+.save H9
+H9 00000
+H9 11111
+H9 22222
+H9 33333
+H9 44444
+.end
+.print H9
+.print H9

@@ -1,0 +1,90 @@
+.save K0
+K0 00000
+K0 11111
+K0 22222
+K0 33333
+K0 44444
+.end
+.print K0
+.print K0
+.save K1
+K1 00000
+K1 11111
+K1 22222
+K1 33333
+K1 44444
+.end
+.print K1
+.print K1
+.save K2
+K2 00000
+K2 11111
+K2 22222
+K2 33333
+K2 44444
+.end
+.print K2
+.print K2
+.save K3
+K3 00000
+K3 11111
+K3 22222
+K3 33333
+K3 44444
+.end
+.print K3
+.print K3
+.save K4
+K4 00000
+K4 11111
+K4 22222
+K4 33333
+K4 44444
+.end
+.print K4
+.print K4
+.save K5
+K5 00000
+K5 11111
+K5 22222
+K5 33333
+K5 44444
+.end
+.print K5
+.print K5
+.save K6
+K6 00000
+K6 11111
+K6 22222
+K6 33333
+K6 44444
+.end
+.print K6
+.print K6
+.save K7
+K7 00000
+K7 11111
+K7 22222
+K7 33333
+K7 44444
+.end
+.print K7
+.print K7
+.save K8
+K8 00000
+K8 11111
+K8 22222
+K8 33333
+K8 44444
+.end
+.print K8
+.print K8
+.save K9
+K9 00000
+K9 11111
+K9 22222
+K9 33333
+K9 44444
+.end
+.print K9
+.print K9

@@ -1,0 +1,90 @@
+.save Z0
+Z0 00000
+Z0 11111
+Z0 22222
+Z0 33333
+Z0 44444
+.end
+.print Z0
+.print Z0
+.save Z1
+Z1 00000
+Z1 11111
+Z1 22222
+Z1 33333
+Z1 44444
+.end
+.print Z1
+.print Z1
+.save Z2
+Z2 00000
+Z2 11111
+Z2 22222
+Z2 33333
+Z2 44444
+.end
+.print Z2
+.print Z2
+.save Z3
+Z3 00000
+Z3 11111
+Z3 22222
+Z3 33333
+Z3 44444
+.end
+.print Z3
+.print Z3
+.save Z4
+Z4 00000
+Z4 11111
+Z4 22222
+Z4 33333
+Z4 44444
+.end
+.print Z4
+.print Z4
+.save Z5
+Z5 00000
+Z5 11111
+Z5 22222
+Z5 33333
+Z5 44444
+.end
+.print Z5
+.print Z5
+.save Z6
+Z6 00000
+Z6 11111
+Z6 22222
+Z6 33333
+Z6 44444
+.end
+.print Z6
+.print Z6
+.save Z7
+Z7 00000
+Z7 11111
+Z7 22222
+Z7 33333
+Z7 44444
+.end
+.print Z7
+.print Z7
+.save Z8
+Z8 00000
+Z8 11111
+Z8 22222
+Z8 33333
+Z8 44444
+.end
+.print Z8
+.print Z8
+.save Z9
+Z9 00000
+Z9 11111
+Z9 22222
+Z9 33333
+Z9 44444
+.end
+.print Z9
+.print Z9

@@ -1,0 +1,90 @@
+.save E0
+E0 00000
+E0 11111
+E0 22222
+E0 33333
+E0 44444
+.end
+.print E0
+.print E0
+.save E1
+E1 00000
+E1 11111
+E1 22222
+E1 33333
+E1 44444
+.end
+.print E1
+.print E1
+.save E2
+E2 00000
+E2 11111
+E2 22222
+E2 33333
+E2 44444
+.end
+.print E2
+.print E2
+.save E3
+E3 00000
+E3 11111
+E3 22222
+E3 33333
+E3 44444
+.end
+.print E3
+.print E3
+.save E4
+E4 00000
+E4 11111
+E4 22222
+E4 33333
+E4 44444
+.end
+.print E4
+.print E4
+.save E5
+E5 00000
+E5 11111
+E5 22222
+E5 33333
+E5 44444
+.end
+.print E5
+.print E5
+.save E6
+E6 00000
+E6 11111
+E6 22222
+E6 33333
+E6 44444
+.end
+.print E6
+.print E6
+.save E7
+E7 00000
+E7 11111
+E7 22222
+E7 33333
+E7 44444
+.end
+.print E7
+.print E7
+.save E8
+E8 00000
+E8 11111
+E8 22222
+E8 33333
+E8 44444
+.end
+.print E8
+.print E8
+.save E9
+E9 00000
+E9 11111
+E9 22222
+E9 33333
+E9 44444
+.end
+.print E9
+.print E9

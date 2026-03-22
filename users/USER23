@@ -1,0 +1,90 @@
+.save X0
+X0 00000
+X0 11111
+X0 22222
+X0 33333
+X0 44444
+.end
+.print X0
+.print X0
+.save X1
+X1 00000
+X1 11111
+X1 22222
+X1 33333
+X1 44444
+.end
+.print X1
+.print X1
+.save X2
+X2 00000
+X2 11111
+X2 22222
+X2 33333
+X2 44444
+.end
+.print X2
+.print X2
+.save X3
+X3 00000
+X3 11111
+X3 22222
+X3 33333
+X3 44444
+.end
+.print X3
+.print X3
+.save X4
+X4 00000
+X4 11111
+X4 22222
+X4 33333
+X4 44444
+.end
+.print X4
+.print X4
+.save X5
+X5 00000
+X5 11111
+X5 22222
+X5 33333
+X5 44444
+.end
+.print X5
+.print X5
+.save X6
+X6 00000
+X6 11111
+X6 22222
+X6 33333
+X6 44444
+.end
+.print X6
+.print X6
+.save X7
+X7 00000
+X7 11111
+X7 22222
+X7 33333
+X7 44444
+.end
+.print X7
+.print X7
+.save X8
+X8 00000
+X8 11111
+X8 22222
+X8 33333
+X8 44444
+.end
+.print X8
+.print X8
+.save X9
+X9 00000
+X9 11111
+X9 22222
+X9 33333
+X9 44444
+.end
+.print X9
+.print X9

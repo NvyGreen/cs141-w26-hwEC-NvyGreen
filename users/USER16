@@ -1,0 +1,90 @@
+.save Q0
+Q0 00000
+Q0 11111
+Q0 22222
+Q0 33333
+Q0 44444
+.end
+.print Q0
+.print Q0
+.save Q1
+Q1 00000
+Q1 11111
+Q1 22222
+Q1 33333
+Q1 44444
+.end
+.print Q1
+.print Q1
+.save Q2
+Q2 00000
+Q2 11111
+Q2 22222
+Q2 33333
+Q2 44444
+.end
+.print Q2
+.print Q2
+.save Q3
+Q3 00000
+Q3 11111
+Q3 22222
+Q3 33333
+Q3 44444
+.end
+.print Q3
+.print Q3
+.save Q4
+Q4 00000
+Q4 11111
+Q4 22222
+Q4 33333
+Q4 44444
+.end
+.print Q4
+.print Q4
+.save Q5
+Q5 00000
+Q5 11111
+Q5 22222
+Q5 33333
+Q5 44444
+.end
+.print Q5
+.print Q5
+.save Q6
+Q6 00000
+Q6 11111
+Q6 22222
+Q6 33333
+Q6 44444
+.end
+.print Q6
+.print Q6
+.save Q7
+Q7 00000
+Q7 11111
+Q7 22222
+Q7 33333
+Q7 44444
+.end
+.print Q7
+.print Q7
+.save Q8
+Q8 00000
+Q8 11111
+Q8 22222
+Q8 33333
+Q8 44444
+.end
+.print Q8
+.print Q8
+.save Q9
+Q9 00000
+Q9 11111
+Q9 22222
+Q9 33333
+Q9 44444
+.end
+.print Q9
+.print Q9

@@ -1,0 +1,90 @@
+.save M0
+M0 00000
+M0 11111
+M0 22222
+M0 33333
+M0 44444
+.end
+.print M0
+.print M0
+.save M1
+M1 00000
+M1 11111
+M1 22222
+M1 33333
+M1 44444
+.end
+.print M1
+.print M1
+.save M2
+M2 00000
+M2 11111
+M2 22222
+M2 33333
+M2 44444
+.end
+.print M2
+.print M2
+.save M3
+M3 00000
+M3 11111
+M3 22222
+M3 33333
+M3 44444
+.end
+.print M3
+.print M3
+.save M4
+M4 00000
+M4 11111
+M4 22222
+M4 33333
+M4 44444
+.end
+.print M4
+.print M4
+.save M5
+M5 00000
+M5 11111
+M5 22222
+M5 33333
+M5 44444
+.end
+.print M5
+.print M5
+.save M6
+M6 00000
+M6 11111
+M6 22222
+M6 33333
+M6 44444
+.end
+.print M6
+.print M6
+.save M7
+M7 00000
+M7 11111
+M7 22222
+M7 33333
+M7 44444
+.end
+.print M7
+.print M7
+.save M8
+M8 00000
+M8 11111
+M8 22222
+M8 33333
+M8 44444
+.end
+.print M8
+.print M8
+.save M9
+M9 00000
+M9 11111
+M9 22222
+M9 33333
+M9 44444
+.end
+.print M9
+.print M9

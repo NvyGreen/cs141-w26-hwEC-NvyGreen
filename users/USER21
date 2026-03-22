@@ -1,0 +1,90 @@
+.save V0
+V0 00000
+V0 11111
+V0 22222
+V0 33333
+V0 44444
+.end
+.print V0
+.print V0
+.save V1
+V1 00000
+V1 11111
+V1 22222
+V1 33333
+V1 44444
+.end
+.print V1
+.print V1
+.save V2
+V2 00000
+V2 11111
+V2 22222
+V2 33333
+V2 44444
+.end
+.print V2
+.print V2
+.save V3
+V3 00000
+V3 11111
+V3 22222
+V3 33333
+V3 44444
+.end
+.print V3
+.print V3
+.save V4
+V4 00000
+V4 11111
+V4 22222
+V4 33333
+V4 44444
+.end
+.print V4
+.print V4
+.save V5
+V5 00000
+V5 11111
+V5 22222
+V5 33333
+V5 44444
+.end
+.print V5
+.print V5
+.save V6
+V6 00000
+V6 11111
+V6 22222
+V6 33333
+V6 44444
+.end
+.print V6
+.print V6
+.save V7
+V7 00000
+V7 11111
+V7 22222
+V7 33333
+V7 44444
+.end
+.print V7
+.print V7
+.save V8
+V8 00000
+V8 11111
+V8 22222
+V8 33333
+V8 44444
+.end
+.print V8
+.print V8
+.save V9
+V9 00000
+V9 11111
+V9 22222
+V9 33333
+V9 44444
+.end
+.print V9
+.print V9

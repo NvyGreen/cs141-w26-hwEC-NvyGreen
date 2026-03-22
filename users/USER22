@@ -1,0 +1,90 @@
+.save W0
+W0 00000
+W0 11111
+W0 22222
+W0 33333
+W0 44444
+.end
+.print W0
+.print W0
+.save W1
+W1 00000
+W1 11111
+W1 22222
+W1 33333
+W1 44444
+.end
+.print W1
+.print W1
+.save W2
+W2 00000
+W2 11111
+W2 22222
+W2 33333
+W2 44444
+.end
+.print W2
+.print W2
+.save W3
+W3 00000
+W3 11111
+W3 22222
+W3 33333
+W3 44444
+.end
+.print W3
+.print W3
+.save W4
+W4 00000
+W4 11111
+W4 22222
+W4 33333
+W4 44444
+.end
+.print W4
+.print W4
+.save W5
+W5 00000
+W5 11111
+W5 22222
+W5 33333
+W5 44444
+.end
+.print W5
+.print W5
+.save W6
+W6 00000
+W6 11111
+W6 22222
+W6 33333
+W6 44444
+.end
+.print W6
+.print W6
+.save W7
+W7 00000
+W7 11111
+W7 22222
+W7 33333
+W7 44444
+.end
+.print W7
+.print W7
+.save W8
+W8 00000
+W8 11111
+W8 22222
+W8 33333
+W8 44444
+.end
+.print W8
+.print W8
+.save W9
+W9 00000
+W9 11111
+W9 22222
+W9 33333
+W9 44444
+.end
+.print W9
+.print W9

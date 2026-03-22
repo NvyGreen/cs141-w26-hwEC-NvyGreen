@@ -1,0 +1,90 @@
+.save C0
+C0 00000
+C0 11111
+C0 22222
+C0 33333
+C0 44444
+.end
+.print C0
+.print C0
+.save C1
+C1 00000
+C1 11111
+C1 22222
+C1 33333
+C1 44444
+.end
+.print C1
+.print C1
+.save C2
+C2 00000
+C2 11111
+C2 22222
+C2 33333
+C2 44444
+.end
+.print C2
+.print C2
+.save C3
+C3 00000
+C3 11111
+C3 22222
+C3 33333
+C3 44444
+.end
+.print C3
+.print C3
+.save C4
+C4 00000
+C4 11111
+C4 22222
+C4 33333
+C4 44444
+.end
+.print C4
+.print C4
+.save C5
+C5 00000
+C5 11111
+C5 22222
+C5 33333
+C5 44444
+.end
+.print C5
+.print C5
+.save C6
+C6 00000
+C6 11111
+C6 22222
+C6 33333
+C6 44444
+.end
+.print C6
+.print C6
+.save C7
+C7 00000
+C7 11111
+C7 22222
+C7 33333
+C7 44444
+.end
+.print C7
+.print C7
+.save C8
+C8 00000
+C8 11111
+C8 22222
+C8 33333
+C8 44444
+.end
+.print C8
+.print C8
+.save C9
+C9 00000
+C9 11111
+C9 22222
+C9 33333
+C9 44444
+.end
+.print C9
+.print C9
