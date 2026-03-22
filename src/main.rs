@@ -37,6 +37,19 @@ impl Printer {
 }
 
 
+struct FileInfo {
+    diskNumber: i64,
+    startingSector: i64,
+    fileLength: i64
+}
+
+impl FileInfo {
+    fn new(diskNumber: i64, startingSector: i64, fileLength: i64) -> Self {
+        Self { diskNumber, startingSector, fileLength}
+    }
+}
+
+
 fn main() {
     println!("*** 141 OS Simulation ***");
 }
