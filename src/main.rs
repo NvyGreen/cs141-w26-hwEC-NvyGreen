@@ -1,5 +1,6 @@
 use std::sync::{Arc, RwLock};
 use std::fs::{File, OpenOptions};
+use std::collections::HashMap;
 
 struct Disk {
     sectors: [Arc<RwLock<String>>; Disk::NUM_SECTORS]
@@ -38,14 +39,33 @@ impl Printer {
 
 
 struct FileInfo {
-    diskNumber: i64,
-    startingSector: i64,
-    fileLength: i64
+    disk_number: i64,
+    starting_sector: i64,
+    file_length: i64
 }
 
 impl FileInfo {
-    fn new(diskNumber: i64, startingSector: i64, fileLength: i64) -> Self {
-        Self { diskNumber, startingSector, fileLength}
+    fn new(disk_number: i64, starting_sector: i64, file_length: i64) -> Self {
+        Self { disk_number, starting_sector, file_length}
+    }
+}
+
+
+struct DirectoryManager {
+    t: HashMap<String, FileInfo>
+}
+
+impl DirectoryManager {
+    fn new() -> Self {
+        Self { t: HashMap::new() }
+    }
+
+    fn enter(&mut self, file_name: String, file: FileInfo) {
+        self.t.insert(file_name, file);
+    }
+
+    fn lookup(&self, file_name: &str) -> Option<&FileInfo> {
+        self.t.get(file_name)
     }
 }
 
