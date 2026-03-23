@@ -116,6 +116,10 @@ impl DirectoryManager {
     fn lookup(&self, file_name: String) -> Option<FileInfo> {
         self.t.get(&file_name).cloned()
     }
+
+	fn size(&self) -> usize {
+		self.t.len()
+	}
 }
 
 
@@ -151,6 +155,10 @@ impl DiskManager {
         Arc::clone(&self.disks[index])
     }
 
+	fn get_num_files(&self) -> usize {
+		self.directory_manager.lock().unwrap().size()
+	}
+
     fn get_file_info(&self, file_name: String) -> Option<FileInfo> {
         let dm = self.directory_manager.lock().unwrap();
         dm.lookup(file_name)
@@ -159,6 +167,10 @@ impl DiskManager {
     fn get_next_sector(&self, index: usize) -> usize {
         self.next_free_sector.lock().unwrap()[index]
     }
+
+	fn get_total_sectors_used(&self) -> usize {
+		self.next_free_sector.lock().unwrap().iter().sum()
+	}
 
     fn finish_disk(&self, index: usize, new_free_sector: usize, file_name: String, info: FileInfo) {
         {
@@ -264,8 +276,8 @@ impl UserThread {
         }
     }
 
-    fn run(self: Arc<Self>) -> thread::JoinHandle<Result<(), Box<dyn std::error::Error + Send + Sync>>> {
-        thread::spawn(move || -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    fn run(self: Arc<Self>) -> thread::JoinHandle<Result<u64, Box<dyn std::error::Error + Send + Sync>>> {
+        thread::spawn(move || -> Result<u64, Box<dyn std::error::Error + Send + Sync>> {
             let mut writing = false;
             let input_file = File::open(&self.file_name)?;
             let _in = BufReader::new(input_file);
@@ -323,17 +335,19 @@ impl UserThread {
                 }
             }
 
+			let num_print_jobs = print_jobs.len() as u64;
             for print_job in print_jobs {
                 print_job.join().expect("A PrintJobThread panicked");
             }
 
-            Ok(())
+            Ok(num_print_jobs)
         })
     }
 }
 
 
 fn main() {
+	let start = time::Instant::now();
     let args: Vec<String> = std::env::args().collect();
 
     let num_users: usize = args[1][1..].parse().unwrap();
@@ -351,7 +365,16 @@ fn main() {
         users.push(user.run());
     }
 
+	let mut total_print_jobs = 0;
     for user in users {
-        user.join().expect("A UserThread panicked");
+        if let Ok(Ok(count)) = user.join() {
+			total_print_jobs += count;
+		}
     }
+
+	let duration = start.elapsed();
+	println!("Total runtime: {:?}", duration);
+	println!("Total files saved: {}", disk_manager.get_num_files());
+	println!("Total print jobs: {}", total_print_jobs);
+	println!("Total sectors used: {}", disk_manager.get_total_sectors_used());
 }
