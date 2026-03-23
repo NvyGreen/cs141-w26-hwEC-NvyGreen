@@ -3,6 +3,7 @@ use std::fs::{File, OpenOptions};
 use std::collections::HashMap;
 use std::{thread, time};
 use std::io::{Write, BufWriter, BufReader, BufRead};
+use chrono::Local;
 
 struct Disk {
     sectors: Vec<RwLock<String>>
@@ -59,14 +60,16 @@ impl Printer {
 
 
 struct PrintJobThread {
+	file_name: String,
     file_info: FileInfo,
     disk_to_read: Arc<Disk>,
-    printer_manager: Arc<PrinterManager>
+    printer_manager: Arc<PrinterManager>,
+	log_file: Arc<Mutex<BufWriter<File>>>
 }
 
 impl PrintJobThread {
-    fn new(file_info: FileInfo, disk_to_read: Arc<Disk>, printer_manager: Arc<PrinterManager>) -> Self {
-        Self { file_info, disk_to_read, printer_manager }
+    fn new(file_name: String, file_info: FileInfo, disk_to_read: Arc<Disk>, printer_manager: Arc<PrinterManager>, log_file: Arc<Mutex<BufWriter<File>>>) -> Self {
+        Self { file_name, file_info, disk_to_read, printer_manager, log_file }
     }
 
     fn run(self: Arc<Self>) -> thread::JoinHandle<()> {
@@ -75,12 +78,25 @@ impl PrintJobThread {
             let mut printer = self.printer_manager.get_printer(print_num);
             let mut line = String::new();
 
+			{
+				let timestamp_start = Local::now();
+				let mut log_start = self.log_file.lock().unwrap();
+				writeln!(log_start, "Started printing file {} to PRINTER{} at {}", self.file_name, print_num, timestamp_start.format("%Y-%m-%dT%H:%M:%S")).unwrap();
+				log_start.flush().unwrap();
+			}
+
             for i in 0..self.file_info.file_length {
                 self.disk_to_read.read(self.file_info.starting_sector + i, &mut line);
                 printer.print(line.clone());
             }
-
             self.printer_manager.release(print_num);
+
+			{
+				let timestamp_end = Local::now();
+				let mut log_end = self.log_file.lock().unwrap();
+				writeln!(log_end, "Finished printing file {} to PRINTER{} at {}", self.file_name, print_num, timestamp_end.format("%Y-%m-%dT%H:%M:%S")).unwrap();
+				log_end.flush().unwrap();
+			}
         })
     }
 }
@@ -265,14 +281,16 @@ struct UserThread {
     file_name: String,
     disk_manager: Arc<DiskManager>,
     printer_manager: Arc<PrinterManager>,
+	log_file: Arc<Mutex<BufWriter<File>>>
 }
 
 impl UserThread {
-    fn new(id: usize, disk_manager: Arc<DiskManager>, printer_manager: Arc<PrinterManager>) -> Self {
+    fn new(id: usize, disk_manager: Arc<DiskManager>, printer_manager: Arc<PrinterManager>, log_file: Arc<Mutex<BufWriter<File>>>) -> Self {
         Self {
             file_name: "users/USER".to_owned() + &id.to_string(),
             disk_manager,
-            printer_manager
+            printer_manager,
+			log_file
         }
     }
 
@@ -305,10 +323,20 @@ impl UserThread {
 	                    start_sector = self.disk_manager.get_next_sector(disk_num);
 	                    sector = start_sector;
 	                    writing = true;
+
+						let timestamp = Local::now();
+						let mut log = self.log_file.lock().unwrap();
+						writeln!(log, "Started writing file {} to disk {} at {}", name_of_file, disk_num, timestamp.format("%Y-%m-%dT%H:%M:%S")).unwrap();
+						log.flush().unwrap();
 					}
                 } else if line.starts_with(".end") && writing {
                     let info = FileInfo::new(disk_num, start_sector, file_len);
-                    self.disk_manager.finish_disk(disk_num, sector, name_of_file, info);
+                    self.disk_manager.finish_disk(disk_num, sector, name_of_file.clone(), info);
+
+					let timestamp = Local::now();
+					let mut log = self.log_file.lock().unwrap();
+					writeln!(log, "Finished writing file {} to disk {} at {}", name_of_file, disk_num, timestamp.format("%Y-%m-%dT%H:%M:%S")).unwrap();
+					log.flush().unwrap();
 
                     name_of_file = String::new();
                     start_sector = 2049;
@@ -323,7 +351,7 @@ impl UserThread {
                     
 					if let Some(file_info) = self.disk_manager.get_file_info(print_out_file.clone()) {
 						let read_disk = self.disk_manager.get_disk(file_info.disk_number);
-	                    let job = Arc::new(PrintJobThread::new(file_info, read_disk, Arc::clone(&self.printer_manager)));
+	                    let job = Arc::new(PrintJobThread::new(print_out_file.clone(), file_info, read_disk, Arc::clone(&self.printer_manager), Arc::clone(&self.log_file)));
 	                    print_jobs.push(job.run());
 					} else {
 						println!("Error: File {} not found.", print_out_file);
@@ -347,7 +375,6 @@ impl UserThread {
 
 
 fn main() {
-	let start = time::Instant::now();
     let args: Vec<String> = std::env::args().collect();
 
     let num_users: usize = args[1][1..].parse().unwrap();
@@ -355,13 +382,21 @@ fn main() {
     let num_printers: usize = args[3][1..].parse().unwrap();
     
     println!("*** 141 OS Simulation ***");
+	let timer = time::Instant::now();
+	let log_file = Arc::new(Mutex::new(BufWriter::new(
+		OpenOptions::new()
+			.append(true)
+			.create(true)
+			.open("LOG")
+			.unwrap()
+	)));
 
     let disk_manager = Arc::new(DiskManager::new(num_disks));
     let printer_manager = Arc::new(PrinterManager::new(num_printers));
 
     let mut users: Vec<thread::JoinHandle<_>> = Vec::new();
     for i in 0..num_users {
-        let user = Arc::new(UserThread::new(i, Arc::clone(&disk_manager), Arc::clone(&printer_manager)));
+        let user = Arc::new(UserThread::new(i, Arc::clone(&disk_manager), Arc::clone(&printer_manager), Arc::clone(&log_file)));
         users.push(user.run());
     }
 
@@ -372,7 +407,7 @@ fn main() {
 		}
     }
 
-	let duration = start.elapsed();
+	let duration = timer.elapsed();
 	println!("Total runtime: {:?}", duration);
 	println!("Total files saved: {}", disk_manager.get_num_files());
 	println!("Total print jobs: {}", total_print_jobs);

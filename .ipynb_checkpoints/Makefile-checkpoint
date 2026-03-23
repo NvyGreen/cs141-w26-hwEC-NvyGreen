@@ -3,7 +3,7 @@ build:
 
 clean:
 	cargo clean
-	rm -f PRINTER*
+	rm -f PRINTER* LOG
 
 testHW8: build
 	cargo run -- -1 -1 -1
