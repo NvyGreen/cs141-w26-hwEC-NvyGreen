@@ -1,4 +1,4 @@
-use std::sync::{Arc, RwLock, Condvar};
+use std::sync::{Arc, RwLock, Mutex};
 use std::fs::{File, OpenOptions};
 use std::collections::HashMap;
 
@@ -27,7 +27,7 @@ struct Printer {
 impl Printer {
     const PRINT_DELAY: i64 = 275;
 
-    fn new(id: i64) -> Self {
+    fn new(id: usize) -> Self {
         let file = OpenOptions::new()
             .append(true)
             .create(true)
@@ -94,6 +94,21 @@ impl DiskManager {
             disks: std::iter::repeat_with(Disk::new).take(items).collect(),
             next_free_sector: vec![0; items],
             directory_manager: DirectoryManager::new()
+        }
+    }
+}
+
+
+struct PrinterManager {
+    is_free: Arc<Mutex<Vec<bool>>>,
+    printers: Vec<Printer>
+}
+
+impl PrinterManager {
+    fn new(items: usize) -> Self {
+        Self {
+            is_free: Arc::new(Mutex::new(vec![true; items])),
+            printers: (0..items).map(|i| Printer::new(i)).collect()
         }
     }
 }
