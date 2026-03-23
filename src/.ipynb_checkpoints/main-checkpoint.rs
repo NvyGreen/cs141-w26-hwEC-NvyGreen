@@ -58,7 +58,32 @@ impl Printer {
 }
 
 
-// PrintJobThread
+struct PrintJobThread {
+    file_info: FileInfo,
+    disk_to_read: Arc<Disk>,
+    printer_manager: Arc<PrinterManager>
+}
+
+impl PrintJobThread {
+    fn new(file_info: FileInfo, disk_to_read: Arc<Disk>, printer_manager: Arc<PrinterManager>) -> Self {
+        Self { file_info, disk_to_read, printer_manager }
+    }
+
+    fn run(self: Arc<Self>) -> thread::JoinHandle<()> {
+        thread::spawn(move || {
+            let print_num = self.printer_manager.request();
+            let mut printer = self.printer_manager.get_printer(print_num);
+            let mut line = String::new();
+
+            for i in 0..self.file_info.file_length {
+                self.disk_to_read.read(self.file_info.starting_sector + i, &mut line);
+                printer.print(line.clone());
+            }
+
+            self.printer_manager.release(print_num);
+        })
+    }
+}
 
 
 #[derive(Clone)]
