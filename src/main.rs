@@ -327,5 +327,24 @@ impl UserThread {
 
 
 fn main() {
+    let args: Vec<String> = std::env::args().collect();
+
+    let num_users: usize = args[1][1..].parse().unwrap();
+    let num_disks: usize = args[2][1..].parse().unwrap();
+    let num_printers: usize = args[3][1..].parse().unwrap();
+    
     println!("*** 141 OS Simulation ***");
+
+    let disk_manager = Arc::new(DiskManager::new(num_disks));
+    let printer_manager = Arc::new(PrinterManager::new(num_printers));
+
+    let mut users: Vec<thread::JoinHandle<_>> = Vec::new();
+    for i in 0..num_users {
+        let user = Arc::new(UserThread::new(i, Arc::clone(&disk_manager), Arc::clone(&printer_manager)));
+        users.push(user.run());
+    }
+
+    for user in users {
+        user.join().expect("A UserThread panicked");
+    }
 }
