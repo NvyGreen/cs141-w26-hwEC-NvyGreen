@@ -2,6 +2,7 @@ use std::sync::{Arc, RwLock, Mutex};
 use std::fs::{File, OpenOptions};
 use std::collections::HashMap;
 use std::{thread, time};
+use std::io::{Write, BufWriter};
 
 struct Disk {
     sectors: [String; Disk::NUM_SECTORS]
@@ -28,7 +29,7 @@ impl Disk {
 
 
 struct Printer {
-    out: File
+    out: BufWriter<File>
 }
 
 impl Printer {
@@ -40,7 +41,13 @@ impl Printer {
             .create(true)
             .open("PRINTER".to_owned() + &id.to_string())
             .unwrap();
-        Self { out: file }
+        Self { out: BufWriter::new(file) }
+    }
+
+    fn print(&mut self, data: String) {
+        thread::sleep(time::Duration::from_millis(Printer::PRINT_DELAY));
+        writeln!(self.out, "{}", data).unwrap();
+        self.out.flush().unwrap();
     }
 }
 
