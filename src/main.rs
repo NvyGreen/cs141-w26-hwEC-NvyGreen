@@ -1,21 +1,28 @@
 use std::sync::{Arc, RwLock, Mutex};
 use std::fs::{File, OpenOptions};
 use std::collections::HashMap;
+use std::{thread, time};
 
 struct Disk {
-    sectors: [Arc<RwLock<String>>; Disk::NUM_SECTORS]
+    sectors: [String; Disk::NUM_SECTORS]
 }
 
 impl Disk {
     const NUM_SECTORS: usize = 2048;
-    const DISK_DELAY: i64 = 80;
+    const DISK_DELAY: u64 = 80;
     
     fn new() -> Self {
-        Self {
-            sectors: std::array::from_fn(|_| {
-                Arc::new(RwLock::new(String::new()))
-            }),
-        }
+        Self { sectors: std::array::from_fn(|_| String::new()) }
+    }
+
+    fn write(&mut self, sector: usize, data: String) {
+        thread::sleep(time::Duration::from_millis(Disk::DISK_DELAY));
+        self.sectors[sector] = data.clone();
+    }
+
+    fn read(&self, sector: usize, data: &mut String) {
+        thread::sleep(time::Duration::from_millis(Disk::DISK_DELAY));
+        *data = self.sectors[sector].clone();
     }
 }
 
@@ -25,7 +32,7 @@ struct Printer {
 }
 
 impl Printer {
-    const PRINT_DELAY: i64 = 275;
+    const PRINT_DELAY: u64 = 275;
 
     fn new(id: usize) -> Self {
         let file = OpenOptions::new()
