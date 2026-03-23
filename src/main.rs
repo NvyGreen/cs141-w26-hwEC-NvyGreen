@@ -139,14 +139,47 @@ impl DirectoryManager {
 }
 
 
-trait ResourceManager {
-    fn request(&self) -> usize;
-    fn release(&self, index: usize);
+struct ResourceManager {
+	is_free: Arc<(Mutex<Vec<bool>>, Condvar)>
+}
+
+impl ResourceManager {
+	fn new(items: usize) -> Self {
+		Self {
+			is_free: Arc::new((
+	            Mutex::new(vec![true; items]),
+	            Condvar::new()
+            )),
+		}
+	}
+	
+	fn request(&self) -> usize {
+        let (lock, cvar) = &*self.is_free;
+        let mut guard = lock.lock().unwrap();
+
+        loop {
+            for i in 0..guard.len() {
+                if guard[i] {
+                    guard[i] = false;
+                    return i;
+                }
+            }
+
+            guard = cvar.wait(guard).unwrap();
+        }
+    }
+
+    fn release(&self, index: usize) {
+        let (lock, cvar) = &*self.is_free;
+        let mut guard = lock.lock().unwrap();
+        guard[index] = true;
+        cvar.notify_one();
+    }
 }
 
 
 struct DiskManager {
-    is_free: Arc<(Mutex<Vec<bool>>, Condvar)>,
+    resource_manager: ResourceManager,
     disks: Vec<Arc<Disk>>,
     next_free_sector: Mutex<Vec<usize>>,
     directory_manager: Mutex<DirectoryManager>
@@ -155,10 +188,7 @@ struct DiskManager {
 impl DiskManager {
     fn new(items: usize) -> Self {
         Self {
-            is_free: Arc::new((
-                Mutex::new(vec![true; items]),
-                Condvar::new()
-            )),
+            resource_manager: ResourceManager::new(items),
             disks: (0..items)
                 .map(|_| Arc::new(Disk::new()))
                 .collect(),
@@ -166,6 +196,14 @@ impl DiskManager {
             directory_manager: Mutex::new(DirectoryManager::new())
         }
     }
+
+	fn request(&self) -> usize {
+		self.resource_manager.request()
+	}
+
+	fn release(&self, index: usize) {
+		self.resource_manager.release(index);
+	}
 
     fn get_disk(&self, index: usize) -> Arc<Disk> {
         Arc::clone(&self.disks[index])
@@ -202,77 +240,32 @@ impl DiskManager {
     }
 }
 
-impl ResourceManager for DiskManager {
-    fn request(&self) -> usize {
-        let (lock, cvar) = &*self.is_free;
-        let mut guard = lock.lock().unwrap();
-
-        loop {
-            for i in 0..guard.len() {
-                if guard[i] {
-                    guard[i] = false;
-                    return i;
-                }
-            }
-
-            guard = cvar.wait(guard).unwrap();
-        }
-    }
-
-    fn release(&self, index: usize) {
-        let (lock, cvar) = &*self.is_free;
-        let mut guard = lock.lock().unwrap();
-        guard[index] = true;
-        cvar.notify_one();
-    }
-}
-
 
 struct PrinterManager {
-    is_free: Arc<(Mutex<Vec<bool>>, Condvar)>,
+    resource_manager: ResourceManager,
     printers: Vec<Mutex<Printer>>
 }
 
 impl PrinterManager {
     fn new(items: usize) -> Self {
         Self {
-            is_free: Arc::new((
-                Mutex::new(vec![true; items]),
-                Condvar::new()
-            )),
+            resource_manager: ResourceManager::new(items),
             printers: (0..items)
                 .map(|i| Mutex::new(Printer::new(i)))
                 .collect(),
         }
     }
 
+	fn request(&self) -> usize {
+		self.resource_manager.request()
+	}
+
+	fn release(&self, index: usize) {
+		self.resource_manager.release(index);
+	}
+
     fn get_printer(&self, index: usize) -> std::sync::MutexGuard<'_, Printer> {
         self.printers[index].lock().unwrap()
-    }
-}
-
-impl ResourceManager for PrinterManager {
-    fn request(&self) -> usize {
-        let (lock, cvar) = &*self.is_free;
-        let mut guard = lock.lock().unwrap();
-
-        loop {
-            for i in 0..guard.len() {
-                if guard[i] {
-                    guard[i] = false;
-                    return i;
-                }
-            }
-
-            guard = cvar.wait(guard).unwrap();
-        }
-    }
-
-    fn release(&self, index: usize) {
-        let (lock, cvar) = &*self.is_free;
-        let mut guard = lock.lock().unwrap();
-        guard[index] = true;
-        cvar.notify_one();
     }
 }
 
