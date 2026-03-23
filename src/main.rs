@@ -54,9 +54,48 @@ impl FileInfo {
 }
 
 
+struct DirectoryManager {
+    t: HashMap<String, FileInfo>
+}
+
+impl DirectoryManager {
+    fn new() -> Self {
+        Self { t: HashMap::new() }
+    }
+
+    fn enter(&mut self, file_name: String, file: FileInfo) {
+        self.t.insert(file_name, file);
+    }
+
+    fn lookup(&self, file_name: &str) -> Option<&FileInfo> {
+        self.t.get(file_name)
+    }
+}
+
+
 trait ResourceManager {
     fn request(&self) -> usize;
     fn release(&self, index: usize);
+}
+
+
+struct DiskManager {
+    is_free: Arc<RwLock<Vec<bool>>>,
+    disks: Vec<Disk>,
+    next_free_sector: Vec<usize>,
+    directory_manager: DirectoryManager
+}
+
+
+impl DiskManager {
+    fn new(items: usize) -> Self {
+        Self {
+            is_free: Arc::new(RwLock::new(vec![true; items])),
+            disks: std::iter::repeat_with(Disk::new).take(items).collect(),
+            next_free_sector: vec![0; items],
+            directory_manager: DirectoryManager::new()
+        }
+    }
 }
 
 
