@@ -176,16 +176,50 @@ impl ResourceManager for DiskManager {
 
 
 struct PrinterManager {
-    is_free: Arc<Mutex<Vec<bool>>>,
-    printers: Vec<Printer>
+    is_free: Arc<(Mutex<Vec<bool>>, Condvar)>,
+    printers: Vec<Mutex<Printer>>
 }
 
 impl PrinterManager {
     fn new(items: usize) -> Self {
         Self {
-            is_free: Arc::new(Mutex::new(vec![true; items])),
-            printers: (0..items).map(|i| Printer::new(i)).collect()
+            is_free: Arc::new((
+                Mutex::new(vec![true; items]),
+                Condvar::new()
+            )),
+            printers: (0..items)
+                .map(|i| Mutex::new(Printer::new(i)))
+                .collect(),
         }
+    }
+
+    fn get_printer(&self, index: usize) -> std::sync::MutexGuard<'_, Printer> {
+        self.printers[index].lock().unwrap()
+    }
+}
+
+impl ResourceManager for PrinterManager {
+    fn request(&self) -> usize {
+        let (lock, cvar) = &*self.is_free;
+        let mut guard = lock.lock().unwrap();
+
+        loop {
+            for i in 0..guard.len() {
+                if guard[i] {
+                    guard[i] = false;
+                    return i;
+                }
+            }
+
+            guard = cvar.wait(guard).unwrap();
+        }
+    }
+
+    fn release(&self, index: usize) {
+        let (lock, cvar) = &*self.is_free;
+        let mut guard = lock.lock().unwrap();
+        guard[index] = true;
+        cvar.notify_one();
     }
 }
 
