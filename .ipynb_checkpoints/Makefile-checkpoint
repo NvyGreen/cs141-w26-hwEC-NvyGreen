@@ -1,8 +1,9 @@
 build:
-    cargo build
+	cargo build
 
 run:
-    cargo run
+	cargo run
 
 clean:
-    cargo clean
+	cargo clean
+	rm -f PRINTER*
