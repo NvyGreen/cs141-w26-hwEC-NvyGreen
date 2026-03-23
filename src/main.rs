@@ -284,12 +284,16 @@ impl UserThread {
                 if line.starts_with(".save") && !writing {
                     let parts: Vec<&str> = line.split(" ").collect();
                     name_of_file = parts[1].to_string();
-                    
-                    disk_num = self.disk_manager.request();
-                    disk = Some(self.disk_manager.get_disk(disk_num));
-                    start_sector = self.disk_manager.get_next_sector(disk_num);
-                    sector = start_sector;
-                    writing = true;
+
+					if let Some(_) = self.disk_manager.get_file_info(name_of_file.clone()) {
+						println!("Error: File {} already exists.", name_of_file);
+					} else {
+						disk_num = self.disk_manager.request();
+	                    disk = Some(self.disk_manager.get_disk(disk_num));
+	                    start_sector = self.disk_manager.get_next_sector(disk_num);
+	                    sector = start_sector;
+	                    writing = true;
+					}
                 } else if line.starts_with(".end") && writing {
                     let info = FileInfo::new(disk_num, start_sector, file_len);
                     self.disk_manager.finish_disk(disk_num, sector, name_of_file, info);
@@ -305,10 +309,13 @@ impl UserThread {
                     let parts: Vec<&str> = line.split(" ").collect();
                     let print_out_file = parts[1].to_string();
                     
-                    let file_info = self.disk_manager.get_file_info(print_out_file).unwrap();
-                    let read_disk = self.disk_manager.get_disk(file_info.disk_number);
-                    let job = Arc::new(PrintJobThread::new(file_info, read_disk, Arc::clone(&self.printer_manager)));
-                    print_jobs.push(job.run());
+					if let Some(file_info) = self.disk_manager.get_file_info(print_out_file.clone()) {
+						let read_disk = self.disk_manager.get_disk(file_info.disk_number);
+	                    let job = Arc::new(PrintJobThread::new(file_info, read_disk, Arc::clone(&self.printer_manager)));
+	                    print_jobs.push(job.run());
+					} else {
+						println!("Error: File {} not found.", print_out_file);
+					}
                 } else if writing {
                     disk.as_ref().unwrap().write(sector, line);
                     sector += 1;
