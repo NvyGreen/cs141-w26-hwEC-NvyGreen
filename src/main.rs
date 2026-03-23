@@ -1,4 +1,4 @@
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc, RwLock, Condvar};
 use std::fs::{File, OpenOptions};
 use std::collections::HashMap;
 
@@ -38,6 +38,9 @@ impl Printer {
 }
 
 
+// PrintJobThread
+
+
 struct FileInfo {
     disk_number: i64,
     starting_sector: i64,
@@ -51,22 +54,9 @@ impl FileInfo {
 }
 
 
-struct DirectoryManager {
-    t: HashMap<String, FileInfo>
-}
-
-impl DirectoryManager {
-    fn new() -> Self {
-        Self { t: HashMap::new() }
-    }
-
-    fn enter(&mut self, file_name: String, file: FileInfo) {
-        self.t.insert(file_name, file);
-    }
-
-    fn lookup(&self, file_name: &str) -> Option<&FileInfo> {
-        self.t.get(file_name)
-    }
+trait ResourceManager {
+    fn request(&self) -> usize;
+    fn release(&self, index: usize);
 }
 
 
