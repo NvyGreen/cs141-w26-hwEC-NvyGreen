@@ -2,7 +2,7 @@ use std::sync::{Arc, RwLock, Mutex, Condvar};
 use std::fs::{File, OpenOptions};
 use std::collections::HashMap;
 use std::{thread, time};
-use std::io::{Write, BufWriter};
+use std::io::{Write, BufWriter, BufReader, BufRead};
 
 struct Disk {
     sectors: Vec<RwLock<String>>
@@ -245,6 +245,83 @@ impl ResourceManager for PrinterManager {
         let mut guard = lock.lock().unwrap();
         guard[index] = true;
         cvar.notify_one();
+    }
+}
+
+
+struct UserThread {
+    file_name: String,
+    disk_manager: Arc<DiskManager>,
+    printer_manager: Arc<PrinterManager>,
+}
+
+impl UserThread {
+    fn new(id: usize, disk_manager: Arc<DiskManager>, printer_manager: Arc<PrinterManager>) -> Self {
+        Self {
+            file_name: "users/USER".to_owned() + &id.to_string(),
+            disk_manager,
+            printer_manager
+        }
+    }
+
+    fn run(self: Arc<Self>) -> thread::JoinHandle<Result<(), Box<dyn std::error::Error + Send + Sync>>> {
+        thread::spawn(move || -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+            let mut writing = false;
+            let input_file = File::open(&self.file_name)?;
+            let _in = BufReader::new(input_file);
+            let mut print_jobs: Vec<thread::JoinHandle<()>> = Vec::new();
+
+            let mut name_of_file = String::new();
+            let mut sector = 2049;
+            let mut start_sector = 2049;
+            let mut disk_num = 27;
+            let mut file_len = 0;
+            let mut disk: Option<Arc<Disk>> = None;
+
+            for line_result in _in.lines() {
+                let line: String = line_result?;
+
+                if line.starts_with(".save") && !writing {
+                    let parts: Vec<&str> = line.split(" ").collect();
+                    name_of_file = parts[1].to_string();
+                    
+                    disk_num = self.disk_manager.request();
+                    disk = Some(self.disk_manager.get_disk(disk_num));
+                    start_sector = self.disk_manager.get_next_sector(disk_num);
+                    sector = start_sector;
+                    writing = true;
+                } else if line.starts_with(".end") && writing {
+                    let info = FileInfo::new(disk_num, start_sector, file_len);
+                    self.disk_manager.finish_disk(disk_num, sector, name_of_file, info);
+
+                    name_of_file = String::new();
+                    start_sector = 2049;
+                    sector = 2049;
+                    disk_num = 27;
+                    file_len = 0;
+                    disk = None;
+                    writing = false;
+                } else if line.starts_with(".print") && !writing {
+                    let parts: Vec<&str> = line.split(" ").collect();
+                    let print_out_file = parts[1].to_string();
+                    
+                    let file_info = self.disk_manager.get_file_info(print_out_file).unwrap();
+                    let read_disk = self.disk_manager.get_disk(file_info.disk_number);
+                    let job = Arc::new(PrintJobThread::new(file_info, read_disk, Arc::clone(&self.printer_manager)));
+                    print_jobs.push(job.run());
+                } else if writing {
+                    disk.as_ref().unwrap().write(sector, line);
+                    sector += 1;
+                    file_len += 1;
+                }
+            }
+
+            for print_job in print_jobs {
+                print_job.join().expect("A PrintJobThread panicked");
+            }
+
+            Ok(())
+        })
     }
 }
 
