@@ -24,7 +24,7 @@ impl Disk {
     fn write(&self, sector: usize, data: String) {
         thread::sleep(time::Duration::from_millis(Disk::DISK_DELAY));
         let mut guard = self.sectors[sector].write().unwrap();
-        *guard = data;
+        *guard = data.clone();
     }
 
     fn read(&self, sector: usize, data: &mut String) {
@@ -401,6 +401,7 @@ fn main() {
     }
 
 	let duration = timer.elapsed();
+	println!("\nRun finished. Summary:");
 	println!("Total runtime: {:?}", duration);
 	println!("Total files saved: {}", disk_manager.get_num_files());
 	println!("Total print jobs: {}", total_print_jobs);
