@@ -280,7 +280,7 @@ struct UserThread {
 impl UserThread {
     fn new(id: usize, disk_manager: Arc<DiskManager>, printer_manager: Arc<PrinterManager>, log_file: Arc<Mutex<BufWriter<File>>>) -> Self {
         Self {
-            file_name: "users/USER".to_owned() + &id.to_string(),
+            file_name: "USER".to_owned() + &id.to_string(),
             disk_manager,
             printer_manager,
 			log_file
